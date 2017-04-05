@@ -192,7 +192,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Marca.setVisible(true);
         }
     }
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    /**
+     * cuando se lanza la aplicación la API del cliente de google se conecta al servidor
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    /**
+     * en caso de que se pare la aplicacion el cliente de google se desconecta
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
 
     
+/**
+ * Después de haber hecho una petición de permisos se tratan en este metodo, confirmando
+ * el codigo que pedia ser devuelto
+ *
+ * @param requestCode  comprueba que peticion se esta tratando
+ * @param permissions  no se trata
+ * @param grantResults devuelve una lista con los permisos grantizados
+ */
+
 
 
