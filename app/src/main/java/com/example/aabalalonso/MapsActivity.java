@@ -168,4 +168,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    @Override
+    public void onClick(View v) {
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            //en caso de ya tener los permisos ejecuta el codigo correspondiente
+            myLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (myLocation != null) {
+                myposition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+            }
+        }
+        int distancia = (int) SphericalUtil.computeDistanceBetween(myposition, Marca.getPosition());
+        if (distancia > 200) {
+            Toast.makeText(this, "Muy frio'\nEstas a " + distancia + "m del punto", Toast.LENGTH_LONG).show();
+        } else if (distancia > 150) {
+            Toast.makeText(this, "Frio\nEstas a " + distancia + "m del punto", Toast.LENGTH_LONG).show();
+
+        } else if (distancia > 20) {
+            Toast.makeText(this, "Caliente\nEstas a " + distancia + "m del punto", Toast.LENGTH_LONG).show();
+        } else if (distancia <= 20) {
+            Toast.makeText(this, "¡Lo encontraste!", Toast.LENGTH_LONG).show();
+            Marca.setVisible(true);
+        }
+    }
+
     
+
+
