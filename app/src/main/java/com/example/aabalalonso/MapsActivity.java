@@ -149,3 +149,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      *
      * @param bundle recoge el bundle
      */
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        //se comprueba si el permiso del GPS esta autorizado
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            //en caso de ya tener los permisos ejecuta el codigo correspondiente
+            myLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (myLocation != null) {
+                myposition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                //una vez cargada mi localización se anima el mapa hasta el circulo donde se esconde el tesoro
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myposition, 17));
+            }
+        } else {
+            //al no cumplirse el if significa que el permiso no esta concedido por lo que se pide
+            ActivityCompat.requestPermissions(this, new String[]{
+                    android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        }
+    }
+
+    
