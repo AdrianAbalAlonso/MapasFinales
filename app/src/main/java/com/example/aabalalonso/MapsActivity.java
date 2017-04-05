@@ -220,15 +220,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mGoogleApiClient.disconnect();
     }
 
-    
-/**
- * Después de haber hecho una petición de permisos se tratan en este metodo, confirmando
- * el codigo que pedia ser devuelto
- *
- * @param requestCode  comprueba que peticion se esta tratando
- * @param permissions  no se trata
- * @param grantResults devuelve una lista con los permisos grantizados
- */
+
+/
+
+@Override
+public boolean onMarkerClick(Marker marker) {
+    //Se instancia un objeto de la clase IntentIntegrator
+    IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+    //Se llama al escaner
+    scanIntegrator.initiateScan();
+    return false;
+}
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        //Se obtiene el resultado del proceso de scaneo y se parsea
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanningResult != null) {
+            //se obtiene el contenido ya que el escaner no ha sido nulo
+            String scanContent = scanningResult.getContents();
+            if (scanContent.equalsIgnoreCase("PREMIO!")){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("HAS ENCONTRADO EL TESORO!\n"+"Saca una foto al codigo QR y vuelve al punto de partida.")
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(MapsActivity.this, "abre la cámara!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                builder.create();
+                builder.show();
+            }
+        }else{
+            Toast.makeText(this, "No has escaneado nada", Toast.LENGTH_SHORT).show();
+        }
+        //http://www.hablemosdeandroid.com/p/como-hacer-un-lector-de-codigos-con.html
+    }
+}
+
 
 
 
