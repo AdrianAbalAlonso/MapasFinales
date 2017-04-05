@@ -120,4 +120,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Zona = mMap.addCircle(new CircleOptions().center(center).radius(150).strokeColor(Color.parseColor("#084B8A")));
     }
 
-    
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //comprueba si el permiso ACCESS_FINE_LOCATION ha sido concedido
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            //comprueba si la petición es la de hacer la ubicación disponible
+            if (requestCode == LOCATION_REQUEST_CODE) {
+                //realiza el mismo codigo que en el caso de que ya estuvieran concedidos
+                mMap.setMyLocationEnabled(true);
+            }
+            //comprueba si la petición es la de recoger la ubicación del usuario
+            if (requestCode == REQUEST_LOCATION) {
+                //realiza el mismo codigo que en el caso de que ya estuvieran concedidos
+                myLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                if (myLocation != null) {
+                    myposition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                    //una vez cargada mi localización se anima el mapa hasta el circulo donde se esconde el tesoro
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myposition, 17));
+                }
+            }
+        }
+    }
+
+    /**
+     * cuando el cliente de google se conecta llama a este método para asignar la ubicación del usuario
+     * con el atributo de clase myLocation
+     *
+     * @param bundle recoge el bundle
+     */
